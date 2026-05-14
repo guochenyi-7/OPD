@@ -120,13 +120,13 @@ TEST_DATASET=${TEST_FILE:-["$TEST_DATA_DIR/AIME25/test.parquet", "$TEST_DATA_DIR
 # export ACTOR_MODEL_PATH=model/Qwen3-1.7B-Base-SFT-DeepMath-4B
 # export ACTOR_MODEL_PATH=model/Qwen3-1.7B-sft/checkpoint-6000
 # export ACTOR_MODEL_PATH=model/DeepSeek-R1-Distill-Qwen-7B
-# Use HF repo IDs by default so a fresh clone can run without a pre-created model/ directory.
-# Override with a local path if you have already downloaded checkpoints, e.g.
+# Use local checkpoints by default. Paths are relative to this script's directory.
+# Override with absolute paths or HF repo IDs if needed, e.g.
 # ACTOR_MODEL_PATH=/root/autodl-tmp/models/Qwen3-0.6B-Base
-# REWARD_MODEL_PATH=/root/autodl-tmp/models/Qwen3-1.7B
+# REWARD_MODEL_PATH=Qwen/Qwen3-1.7B
 # bash run_opd_qwen3_0p6b_to_1p7b.sh
 # export ACTOR_MODEL_PATH=model/DS-1.5B-SFT
-export ACTOR_MODEL_PATH=${ACTOR_MODEL_PATH:-Qwen/Qwen3-0.6B-Base}
+export ACTOR_MODEL_PATH=${ACTOR_MODEL_PATH:-model/Qwen3-0.6B-Base}
 export ACTOR_MODEL_NAME=$(basename "$ACTOR_MODEL_PATH")
 # export REWARD_MODEL_PATH=model/Qwen3-4B
 # export REWARD_MODEL_PATH=model/Qwen3-4B-grpo
@@ -138,7 +138,7 @@ export ACTOR_MODEL_NAME=$(basename "$ACTOR_MODEL_PATH")
 # export REWARD_MODEL_PATH=model/Polaris-4B-Preview
 # export REWARD_MODEL_PATH=model/DeepSeek-R1-Distill-Qwen-14B
 # export REWARD_MODEL_PATH=model/JustRL-DeepSeek-1.5B
-export REWARD_MODEL_PATH=${REWARD_MODEL_PATH:-Qwen/Qwen3-1.7B}
+export REWARD_MODEL_PATH=${REWARD_MODEL_PATH:-model/Qwen3-1.7B}
 export REWARD_MODEL_NAME=$(basename "$REWARD_MODEL_PATH")
 
 export PROJECT_PATH=checkpoint
