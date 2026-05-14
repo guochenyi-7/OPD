@@ -239,7 +239,7 @@ def main():
     args = parser.parse_args()
 
     # Specify GPU IDs, with one model instance assigned to each GPU.
-    available_gpus = [0, 1, 2, 3, 4, 5, 6, 7]
+    available_gpus = [0]
     gpu_workers = [str(gpu_id) for gpu_id in available_gpus]
     num_workers = len(gpu_workers)
 
