@@ -14,6 +14,10 @@
 
 set -x
 
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+cd "$SCRIPT_DIR"
+export PYTHONPATH="$SCRIPT_DIR/verl:${PYTHONPATH:-}"
+
 # Configure logging when running outside SBATCH.
 if [ -z "$SLURM_JOB_ID" ]; then
     # Create the log directory and file for local runs.
@@ -135,7 +139,14 @@ export REWARD_MODEL_NAME=$(basename "$REWARD_MODEL_PATH")
 export PROJECT_PATH=checkpoint
 export PARALLEL_SIZE=1
 export CKPT_PATH=${PROJECT_PATH}/${ADV_ESTIMATOR}_${TRAIN_DATASET_NAME}_${ACTOR_MODEL_NAME}_${REWARD_MODEL_NAME}_${MAX_RESP_LENGTH}-T_${TEMPERATURE}-Tch_${TEACHER_TEMPERATURE}-n_${N_RESPONSES}-mbs_${MINI_BATCH_SIZE}-topk_${LOG_PROB_TOP_K}-topk_strategy_${TOP_K_STRATEGY}-rw_${REWARD_WEIGHT_MODE}-$(date +%Y-%m-%d_%H-%M-%S)
-export OUTLINES_CACHE_DIR=~/.cache/outlines/$(uuidgen)
+if command -v uuidgen >/dev/null 2>&1; then
+    OUTLINES_RUN_ID=$(uuidgen)
+elif [ -r /proc/sys/kernel/random/uuid ]; then
+    OUTLINES_RUN_ID=$(cat /proc/sys/kernel/random/uuid)
+else
+    OUTLINES_RUN_ID="$(date +%Y%m%d%H%M%S)-$$"
+fi
+export OUTLINES_CACHE_DIR=~/.cache/outlines/$OUTLINES_RUN_ID
 export NCCL_DEBUG=WARN
 
 # export VLLM_ATTENTION_BACKEND=XFORMERS
@@ -174,7 +185,7 @@ echo "PPO_MAX_TOKEN_LEN_PER_GPU: $PPO_MAX_TOKEN_LEN_PER_GPU"
 echo "ROLLOUT_MAX_NUM_BATCHED_TOKENS: $ROLLOUT_MAX_NUM_BATCHED_TOKENS"
 
 
-ray start --head
+ray start --head --disable-usage-stats
 sleep 5
 
 
