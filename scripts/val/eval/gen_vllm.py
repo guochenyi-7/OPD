@@ -45,17 +45,22 @@ except FileNotFoundError:
 
 # Active model list.
 MODEL_NAMES = MODEL_NAMES_CANDIDATES
-MODEL_NAMES = ["../../model/Qwen3-4B"]
-
-TASKS = [
-    {"name": "AIME24", "path": f"{DATA_DIR}/AIME24/test.parquet", "N": 16},
-    {"name": "AIME25", "path": f"{DATA_DIR}/AIME25/test.parquet", "N": 16},
-    {"name": "AMC23", "path": f"{DATA_DIR}/AMC23/test.parquet", "N": 16},
+# MODEL_NAMES = ["../../model/Qwen3-4B"]
+MODEL_NAMES = [
+    "Qwen/Qwen3-1.7B-Base",
 ]
 
+
+TASKS = [
+    {"name": "MATH-500", "path": f"{DATA_DIR}/MATH-500/test.parquet", "N": 4},
+    {"name": "Minerva", "path": f"{DATA_DIR}/Minerva/test.parquet", "N": 4},
+    {"name": "AMC23", "path": f"{DATA_DIR}/AMC23/test.parquet", "N": 4},
+]
+
+
 PROMPT_TEMPLATE = """{problem} Please reason step by step, and put your final answer within \\boxed{{}}."""
-MAX_TOKENS  = 31744
-TEMPERATURE = 0.7
+MAX_TOKENS  = 8192
+TEMPERATURE = 0.6
 TOP_P       = 0.95
 REPLACE     = False
 
