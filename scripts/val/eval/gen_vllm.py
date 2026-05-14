@@ -47,7 +47,7 @@ except FileNotFoundError:
 MODEL_NAMES = MODEL_NAMES_CANDIDATES
 # MODEL_NAMES = ["../../model/Qwen3-4B"]
 MODEL_NAMES = [
-    "Qwen/Qwen3-1.7B-Base",
+    "Qwen/Qwen3-1.7B",
 ]
 
 
