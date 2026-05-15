@@ -81,6 +81,7 @@ export LOSS_AGG_MODE=${LOSS_AGG_MODE:-"token-mean"} # TODO: "token-mean" / "seq-
 # export TRAIN_DATASET=datasets/OpenThoughts3-1.2M/sampled_complement_30k.parquet
 # export TRAIN_DATASET=datasets/DeepMath-103K/verl_format/train_filtered_sampled.parquet
 export TRAIN_DATASET=datasets/dapo-math-17k.parquet
+export TRAIN_MAX_SAMPLES=${TRAIN_MAX_SAMPLES:-2000}
 # export TRAIN_DATASET=datasets/Skywork-OR1-RL-Data/data/math-00000-of-00001.parquet
 # export TRAIN_DATASET=datasets/Skywork-OR1-RL-Data/filtered/math-1p5b-filtered-diff-max8.parquet
 # export TRAIN_DATASET=datasets/DAPO-Math-17k-Processed/DAPO-Math.parquet
@@ -202,6 +203,7 @@ python3 -m verl.trainer.main_ppo \
     algorithm.grpo_outcome_weight=$GRPO_OUTCOME_WEIGHT \
     data.shuffle=False \
     data.train_files="$TRAIN_DATASET" \
+    data.train_max_samples=$TRAIN_MAX_SAMPLES \
     data.val_files="$TEST_DATASET" \
     data.train_batch_size=$((${MINI_BATCH_SIZE}*${PARALLEL_SIZE})) \
     data.max_prompt_length=$MAX_PROMPT_LENGTH \
