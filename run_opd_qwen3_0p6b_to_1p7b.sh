@@ -99,7 +99,7 @@ export TRAIN_DATASET_NAME=DAPO-Math-17k
 
 export TEST_DATA_DIR=datasets/test_data
 # TRAIN_DATASET=${TRAIN_FILE:-["$DATA_DIR/$TASK/train_${SAMPLE_SIZE}.parquet"]}
-TEST_DATASET=${TEST_FILE:-["$TEST_DATA_DIR/AIME25/test.parquet", "$TEST_DATA_DIR/AMC23/test.parquet", "$TEST_DATA_DIR/AIME24/test.parquet"]}
+TEST_DATASET=${TEST_FILE:-["$TEST_DATA_DIR/MATH-500/test.parquet", "$TEST_DATA_DIR/Minerva/test.parquet", "$TEST_DATA_DIR/AMC23/test.parquet"]}
 # TEST_DATASET=${TEST_FILE:-["$TEST_DATA_DIR/AIME24/test.parquet"]}
 # TEST_DATASET=${TEST_FILE:-["$DATA_DIR/AIME24/test.parquet","$DATA_DIR/AIME25/test.parquet","$DATA_DIR/AMC23/test.parquet","$DATA_DIR/MATH-500/test.parquet","$DATA_DIR/Minerva/test.parquet","$DATA_DIR/Olympiad-Bench/test.parquet"]}
 
