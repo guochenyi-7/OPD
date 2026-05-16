@@ -45,15 +45,12 @@ except FileNotFoundError:
 
 # Active model list.
 MODEL_NAMES = MODEL_NAMES_CANDIDATES
-# MODEL_NAMES = ["../../model/Qwen3-4B"]
-MODEL_NAMES = [
-    "Qwen/Qwen3-1.7B",
-]
+MODEL_NAMES = ["../../model/Qwen3-0.6B-Base"]
 
 
 TASKS = [
     {"name": "MATH-500", "path": f"{DATA_DIR}/MATH-500/test.parquet", "N": 4},
-    {"name": "BRUMO25", "path": f"{DATA_DIR}/Minerva/test.parquet", "N": 4},
+    {"name": "BRUMO25", "path": f"{DATA_DIR}/BRUMO25/test.parquet", "N": 4},
     {"name": "AMC23", "path": f"{DATA_DIR}/AMC23/test.parquet", "N": 4},
 ]
 
