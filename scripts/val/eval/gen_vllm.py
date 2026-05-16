@@ -27,6 +27,7 @@ except ImportError:
 # --------------------------------------------------------------------------- #
 DATA_DIR = "../data"
 # MODEL_FOLDER = "../../model/Qwen3-1.7B-SFT-DAPO-4B-filtered"
+MODEL_FOLDER = "/root/autodl-tmp/OPD/outputs"
 
 def extract_max_number(path):
     """Extract all numbers from a path and return the largest one for sorting."""
@@ -45,7 +46,10 @@ except FileNotFoundError:
 
 # Active model list.
 MODEL_NAMES = MODEL_NAMES_CANDIDATES
-MODEL_NAMES = ["../../model/Qwen3-0.6B-Base"]
+# MODEL_NAMES = ["../../model/Qwen3-0.6B-Base"]
+MODEL_NAMES = [
+    "/root/autodl-tmp/OPD/outputs/hf_ckpt_step59",
+]
 
 
 TASKS = [
