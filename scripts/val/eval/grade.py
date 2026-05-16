@@ -4,7 +4,7 @@ import json
 import pandas as pd
 from pathlib import Path
 import re
-import argparse # Added
+import argparse
 # vllm import moved to conditional execution to save resources if disabled
 
 CV_PROMPT = """
@@ -33,16 +33,16 @@ Here is your task. Simply reply with either CORRECT, INCORRECT, or INVALID. Don'
 Judging the correctness of the candidate's answer:
 """
 
-NAME     = "Qwen3-4B-Non-Thinking-RL-Math" 
-EVAL_DIR = Path(f"justrl_eval_outputs/{NAME}")
-OUTPUT_FILE = EVAL_DIR / "grading_results.json"
-MODEL_NAME = "../../model/CompassVerifier-3B"
+SCRIPT_DIR = Path(__file__).resolve().parent
+REPO_ROOT = SCRIPT_DIR.parents[2]
+DEFAULT_NAME = "hf_ckpt_step59"
+DEFAULT_VERIFIER_MODEL = REPO_ROOT / "model" / "CompassVerifier-3B"
 
 # Global variables to be initialized if needed
 vllm_model = None
 model_tokenizer = None
 sampling_params = None
-length_tokenizer = AutoTokenizer.from_pretrained("../../model/Qwen3-1.7B", local_files_only=True)
+length_tokenizer = None
 
 def get_len(seq):
     if length_tokenizer:
@@ -67,10 +67,11 @@ def process_jsonl_file(file_name):
             data = json.loads(line)
             id = int(data["example_id"])
             while len(results) <= id:
-                results.append({"gt": None, "responses": []})
+                results.append({"gt": None, "question": "", "responses": []})
             gt = data["answer"]
             response = data["response"]
             results[id]["gt"] = gt
+            results[id]["question"] = data.get("prompt", "")
             results[id]["responses"].append(response)
     return results
 
@@ -96,6 +97,9 @@ def grade_file(file_path, use_model_verifier=True):
         num_pred = len(df["responses"][0])
     else:
         df = process_jsonl_file(file_path)
+        if not df:
+            print(f"Skipping empty file: {file_path}")
+            return None
         num_pred = len(df[0]["responses"])
 
     results = {
@@ -210,23 +214,56 @@ def grade_file(file_path, use_model_verifier=True):
 
 def main():
     parser = argparse.ArgumentParser(description="Grade evaluation results.")
-    # New argument to control the verifier
+    parser.add_argument(
+        "--name",
+        default=DEFAULT_NAME,
+        help="Name of the directory under justrl_eval_outputs to grade.",
+    )
+    parser.add_argument(
+        "--eval-dir",
+        type=Path,
+        default=None,
+        help="Evaluation output directory. Defaults to justrl_eval_outputs/<name> next to this script.",
+    )
+    parser.add_argument(
+        "--output-file",
+        type=Path,
+        default=None,
+        help="Path to save grading results. Defaults to <eval-dir>/grading_results.json.",
+    )
+    parser.add_argument(
+        "--tokenizer-path",
+        type=Path,
+        default=None,
+        help="Tokenizer path for output-length statistics. Defaults to <repo>/outputs/<name>.",
+    )
     parser.add_argument(
         "--enable_model_verifier", 
         action="store_true", 
         help="If set, enable the LLM-based verifier. By default, only rule-based grading is used."
     )
+    parser.add_argument(
+        "--verifier-model",
+        type=Path,
+        default=DEFAULT_VERIFIER_MODEL,
+        help="Path to the CompassVerifier model used when --enable_model_verifier is set.",
+    )
     args = parser.parse_args()
 
-    global vllm_model, model_tokenizer, sampling_params
+    eval_dir = args.eval_dir or (SCRIPT_DIR / "justrl_eval_outputs" / args.name)
+    output_file = args.output_file or (eval_dir / "grading_results.json")
+    tokenizer_path = args.tokenizer_path or (REPO_ROOT / "outputs" / args.name)
+
+    global vllm_model, model_tokenizer, sampling_params, length_tokenizer
+    length_tokenizer = AutoTokenizer.from_pretrained(tokenizer_path, local_files_only=True)
     
     # Only load VLLM if we are enabling the verifier
     if args.enable_model_verifier:
         print("Loading CompassVerifier model...")
         from vllm import LLM, SamplingParams
-        model_tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+        model_tokenizer = AutoTokenizer.from_pretrained(args.verifier_model)
         vllm_model = LLM(
-            model=MODEL_NAME,
+            model=str(args.verifier_model),
             tensor_parallel_size=8
         )
         sampling_params = SamplingParams(
@@ -237,11 +274,11 @@ def main():
         print("Model verifier disabled by default. Running in rule-based only mode.")
 
     all_results = []
-    if not EVAL_DIR.exists():
-        print(f"Directory {EVAL_DIR} does not exist.")
+    if not eval_dir.exists():
+        print(f"Directory {eval_dir} does not exist.")
         return
 
-    for file_path in EVAL_DIR.glob("*.jsonl"):
+    for file_path in sorted(eval_dir.glob("*.jsonl")):
         print(f"Processing file: {file_path}")
         # Pass the flag to the grading function
         file_result = grade_file(file_path, use_model_verifier=args.enable_model_verifier)
@@ -249,9 +286,9 @@ def main():
             all_results.append(file_result)
 
     # Save results to JSON
-    with OUTPUT_FILE.open("w", encoding="utf-8") as f:
+    with output_file.open("w", encoding="utf-8") as f:
         json.dump(all_results, f, indent=4)
-    print(f"Grading results saved to {OUTPUT_FILE}")
+    print(f"Grading results saved to {output_file}")
 
 if __name__ == "__main__":
     main()
