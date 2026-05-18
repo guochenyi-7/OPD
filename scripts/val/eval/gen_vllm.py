@@ -54,7 +54,6 @@ MODEL_NAMES = [
 
 TASKS = [
     {"name": "MATH-500", "path": f"{DATA_DIR}/MATH-500/test.parquet", "N": 4},
-    {"name": "BRUMO25", "path": f"{DATA_DIR}/BRUMO25/test.parquet", "N": 4},
     {"name": "AMC23", "path": f"{DATA_DIR}/AMC23/test.parquet", "N": 4},
 ]
 

@@ -57,7 +57,7 @@ export MAX_PROMPT_LENGTH=${MAX_PROMPT_LENGTH:-1024}
 export MAX_RESP_LENGTH=${MAX_RESP_LENGTH:-4096}
 export MAX_VAL_RESP_LENGTH=${MAX_VAL_RESP_LENGTH:-4096}
 export MAX_MODEL_LEN=$(( MAX_RESP_LENGTH + MAX_PROMPT_LENGTH > MAX_VAL_RESP_LENGTH + MAX_PROMPT_LENGTH ? MAX_RESP_LENGTH + MAX_PROMPT_LENGTH : MAX_VAL_RESP_LENGTH + MAX_PROMPT_LENGTH ))
-export MINI_BATCH_SIZE=${MINI_BATCH_SIZE:-40}
+export MINI_BATCH_SIZE=${MINI_BATCH_SIZE:-48}
 export TEMPERATURE=${TEMPERATURE:-1.0} # TODO: 0.6 / 0.8 / 1.0 / 1.2 (default 1.0)
 export TEACHER_TEMPERATURE=${TEACHER_TEMPERATURE:-1.0} # Teacher logits temperature (default 1.0, no scaling)
 export REPETITION_PENALTY=${REPETITION_PENALTY:-1.0} # TODO: 1.0 / 1.1 / 1.2 (default 1.0, no penalty)
@@ -81,7 +81,7 @@ export LOSS_AGG_MODE=${LOSS_AGG_MODE:-"token-mean"} # TODO: "token-mean" / "seq-
 # export TRAIN_DATASET=datasets/OpenThoughts3-1.2M/sampled_complement_30k.parquet
 # export TRAIN_DATASET=datasets/DeepMath-103K/verl_format/train_filtered_sampled.parquet
 export TRAIN_DATASET=datasets/dapo-math-17k-processed.parquet
-export TRAIN_MAX_SAMPLES=${TRAIN_MAX_SAMPLES:-2400}
+export TRAIN_MAX_SAMPLES=${TRAIN_MAX_SAMPLES:-4800}
 # export TRAIN_DATASET=datasets/Skywork-OR1-RL-Data/data/math-00000-of-00001.parquet
 # export TRAIN_DATASET=datasets/Skywork-OR1-RL-Data/filtered/math-1p5b-filtered-diff-max8.parquet
 # export TRAIN_DATASET=datasets/DAPO-Math-17k-Processed/DAPO-Math.parquet
@@ -99,7 +99,7 @@ export TRAIN_DATASET_NAME=DAPO-Math-17k-Processed
 
 export TEST_DATA_DIR=datasets/test_data
 # TRAIN_DATASET=${TRAIN_FILE:-["$DATA_DIR/$TASK/train_${SAMPLE_SIZE}.parquet"]}
-TEST_DATASET=${TEST_FILE:-["$TEST_DATA_DIR/MATH-500/test.parquet", "$TEST_DATA_DIR/Minerva/test.parquet", "$TEST_DATA_DIR/AMC23/test.parquet"]}
+TEST_DATASET=${TEST_FILE:-["$TEST_DATA_DIR/MATH-500/test.parquet", "$TEST_DATA_DIR/AMC23/test.parquet"]}
 # TEST_DATASET=${TEST_FILE:-["$TEST_DATA_DIR/AIME24/test.parquet"]}
 # TEST_DATASET=${TEST_FILE:-["$DATA_DIR/AIME24/test.parquet","$DATA_DIR/AIME25/test.parquet","$DATA_DIR/AMC23/test.parquet","$DATA_DIR/MATH-500/test.parquet","$DATA_DIR/Minerva/test.parquet","$DATA_DIR/Olympiad-Bench/test.parquet"]}
 
@@ -168,7 +168,7 @@ export VLLM_GPU_MEMORY_UTILIZATION=${VLLM_GPU_MEMORY_UTILIZATION:-0.4}
 export VAL_N_RESPONSES=${VAL_N_RESPONSES:-1}
 export REWARD_MICRO_BATCH_SIZE=${REWARD_MICRO_BATCH_SIZE:-4}
 export SAVE_FREQ=${SAVE_FREQ:-20}
-export TEST_FREQ=${TEST_FREQ:-20}
+export TEST_FREQ=${TEST_FREQ:-25}
 
 
 export EXPERIMENT_NAME=${ADV_ESTIMATOR}_${TRAIN_DATASET_NAME}_${ACTOR_MODEL_NAME}_${REWARD_MODEL_NAME}_${MAX_RESP_LENGTH}-T_${TEMPERATURE}-Tch_${TEACHER_TEMPERATURE}-n_${N_RESPONSES}-mbs_${MINI_BATCH_SIZE}-topk_${LOG_PROB_TOP_K}-topk_strategy_${TOP_K_STRATEGY}-rw_${REWARD_WEIGHT_MODE}-$(date +%Y-%m-%d_%H-%M-%S)
