@@ -60,8 +60,8 @@ TASKS = [
 
 PROMPT_TEMPLATE = """{problem} Please reason step by step, and put your final answer within \\boxed{{}}."""
 MAX_TOKENS  = 8192
-TEMPERATURE = 0.6
-TOP_P       = 0.95
+TEMPERATURE = 0.7
+TOP_P       = 0.8
 REPLACE     = False
 
 # --------------------------------------------------------------------------- #
